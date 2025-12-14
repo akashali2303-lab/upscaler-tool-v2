@@ -1,13 +1,108 @@
-body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; text-align: center; padding: 20px; }
-.container { max-width: 900px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-h1 { color: #333; }
-.upload-section { margin: 20px 0; padding: 20px; border: 2px dashed #ccc; border-radius: 5px; }
-button { background: #007bff; color: white; border: none; padding: 10px 20px; cursor: pointer; border-radius: 5px; font-size: 16px; margin-top: 10px; }
-button:hover { background: #0056b3; }
-button:disabled { background: #ccc; cursor: not-allowed; }
-.result-container { display: flex; justify-content: space-around; flex-wrap: wrap; margin-top: 30px; }
-.image-box { flex: 1; min-width: 300px; margin: 10px; }
-img { max-width: 100%; border-radius: 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-.status { margin-top: 10px; font-weight: bold; color: #555; }
-.download-btn { background: #28a745; margin-top: 10px; }
-.download-btn:hover { background: #218838; }
+:root {
+    --glass: rgba(255, 255, 255, 0.05);
+    --border: rgba(255, 255, 255, 0.1);
+    --primary: #00f2fe;
+    --secondary: #4facfe;
+    --bg: #0a0a0a;
+}
+
+body {
+    background-color: var(--bg);
+    color: white;
+    font-family: 'Outfit', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    overflow-x: hidden;
+}
+
+/* Ambient Background */
+.glow-bg {
+    position: fixed;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(79,172,254,0.2) 0%, rgba(0,0,0,0) 70%);
+    top: -20%; left: -20%;
+    z-index: -1;
+    filter: blur(80px);
+    animation: float 10s infinite alternate;
+}
+
+@keyframes float { 0% { transform: translate(0,0); } 100% { transform: translate(100px, 100px); } }
+
+.glass-container {
+    background: var(--glass);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--border);
+    padding: 40px;
+    border-radius: 24px;
+    width: 90%;
+    max-width: 800px;
+    text-align: center;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+}
+
+header h1 { font-weight: 700; margin-bottom: 5px; font-size: 2.5rem; }
+header p { color: #888; font-weight: 300; letter-spacing: 1px; }
+.logo { font-size: 0.8rem; font-weight: 700; color: var(--primary); letter-spacing: 2px; margin-bottom: 20px; }
+
+/* Upload Area */
+.upload-area {
+    border: 2px dashed var(--border);
+    border-radius: 16px;
+    padding: 40px;
+    margin: 30px 0;
+    transition: 0.3s;
+    cursor: pointer;
+}
+.upload-area:hover { border-color: var(--primary); background: rgba(0, 242, 254, 0.05); }
+.sub-text { font-size: 0.8rem; color: #555; }
+
+/* Buttons */
+.neon-btn {
+    background: linear-gradient(90deg, var(--secondary), var(--primary));
+    border: none;
+    padding: 15px 50px;
+    color: #000;
+    font-weight: 700;
+    font-size: 1rem;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: 0.3s;
+    width: 100%;
+}
+.neon-btn:hover { box-shadow: 0 0 20px rgba(0, 242, 254, 0.6); transform: translateY(-2px); }
+.neon-btn:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none; }
+
+/* Loading */
+.loading-bar { height: 4px; background: #333; border-radius: 2px; margin-top: 20px; overflow: hidden; display: none; }
+.bar-fill { height: 100%; background: var(--primary); width: 0%; transition: width 0.3s; animation: load 2s infinite; }
+@keyframes load { 0% { width: 0%; margin-left: 0; } 50% { width: 100%; margin-left: 0; } 100% { margin-left: 100%; } }
+
+/* Results */
+.result-box { margin-top: 40px; animation: fadeIn 0.5s ease-out; }
+.compare-grid { display: flex; gap: 20px; justify-content: center; align-items: center; flex-wrap: wrap; }
+.img-wrapper { flex: 1; min-width: 250px; position: relative; }
+.img-wrapper img { width: 100%; border-radius: 12px; border: 1px solid var(--border); }
+.badge { position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.7); padding: 4px 10px; font-size: 0.7rem; border-radius: 4px; }
+.badge-pro { background: var(--primary); color: black; font-weight: bold; }
+
+.download-link {
+    display: inline-block;
+    margin-top: 20px;
+    color: var(--primary);
+    text-decoration: none;
+    border: 1px solid var(--primary);
+    padding: 10px 30px;
+    border-radius: 30px;
+    transition: 0.3s;
+}
+.download-link:hover { background: var(--primary); color: black; }
+
+@media (max-width: 600px) {
+    .compare-grid { flex-direction: column; }
+    .arrow { transform: rotate(90deg); }
+}
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }

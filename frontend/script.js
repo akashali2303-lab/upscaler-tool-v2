@@ -1,60 +1,77 @@
-// CHANGE THIS URL AFTER DEPLOYING BACKEND TO RENDER
-const BACKEND_URL = "https://YOUR-RENDER-APP-NAME.onrender.com"; 
+// Render URL will go here later
+let API_URL = "http://127.0.0.1:5000/upscale"; 
 
-const imageInput = document.getElementById('imageInput');
-const statusText = document.getElementById('statusText');
-const upscaleBtn = document.getElementById('upscaleBtn');
+const dropZone = document.getElementById('dropZone');
+const fileInput = document.getElementById('fileInput');
+const actionBtn = document.getElementById('actionBtn');
+const statusMsg = document.getElementById('statusMsg');
+const loading = document.getElementById('loading');
+const resultArea = document.getElementById('resultArea');
 
-imageInput.addEventListener('change', function() {
-    if (this.files && this.files[0]) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            document.getElementById('originalPreview').src = e.target.result;
-            document.getElementById('resultContainer').style.display = 'flex';
-        }
-        reader.readAsDataURL(this.files[0]);
-    }
+// Handle Drag & Drop
+dropZone.onclick = () => fileInput.click();
+fileInput.onchange = () => handleFile(fileInput.files[0]);
+
+dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.style.borderColor = '#00f2fe'; });
+dropZone.addEventListener('dragleave', (e) => { e.preventDefault(); dropZone.style.borderColor = 'rgba(255,255,255,0.1)'; });
+dropZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropZone.style.borderColor = 'rgba(255,255,255,0.1)';
+    handleFile(e.dataTransfer.files[0]);
 });
 
-async function uploadImage() {
-    if (!imageInput.files[0]) {
-        alert("Please select an image first.");
-        return;
+function handleFile(file) {
+    if (file && file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            document.getElementById('prevOriginal').src = e.target.result;
+            statusMsg.innerText = `Selected: ${file.name}`;
+            actionBtn.disabled = false;
+            resultArea.style.display = 'none';
+        }
+        reader.readAsDataURL(file);
+    }
+}
+
+actionBtn.onclick = async () => {
+    const file = fileInput.files[0] || document.getElementById('fileInput').files[0]; // fallback
+    if (!file) return;
+
+    // Detect if we are on the deployed site
+    if (window.location.hostname !== "localhost" && window.location.hostname !== "127.0.0.1") {
+        API_URL = "https://YOUR-RENDER-APP-NAME.onrender.com/upscale"; // You will update this later
     }
 
     const formData = new FormData();
-    formData.append("image", imageInput.files[0]);
+    formData.append("image", file);
 
-    upscaleBtn.disabled = true;
-    statusText.innerText = "Processing... This uses CPU so it might take 10-20 seconds.";
+    actionBtn.disabled = true;
+    actionBtn.innerText = "Enhancing...";
+    loading.style.display = 'block';
+    statusMsg.innerText = "AI is removing noise and sharpening details...";
 
     try {
-        // If testing locally, use http://localhost:5000/upscale
-        // If deployed, use the Render URL
-        const urlToUse = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
-                         ? 'http://localhost:5000/upscale' 
-                         : `${BACKEND_URL}/upscale`;
-
-        const response = await fetch(urlToUse, {
-            method: 'POST',
-            body: formData
-        });
-
+        const response = await fetch(API_URL, { method: 'POST', body: formData });
         const data = await response.json();
 
         if (response.ok) {
-            document.getElementById('upscaledPreview').src = data.image;
-            document.getElementById('downloadLink').href = data.image;
-            document.getElementById('oldRes').innerText = data.old_res + " px";
-            document.getElementById('newRes').innerText = data.new_res + " px";
-            statusText.innerText = "Done!";
+            document.getElementById('prevEnhanced').src = data.image;
+            document.getElementById('downloadBtn').href = data.image;
+            document.getElementById('metaOriginal').innerText = data.old_res;
+            document.getElementById('metaEnhanced').innerText = data.new_res;
+            
+            resultArea.style.display = 'block';
+            statusMsg.innerText = "Enhancement Complete!";
+            resultArea.scrollIntoView({ behavior: 'smooth' });
         } else {
-            statusText.innerText = "Error: " + data.error;
+            statusMsg.innerText = "Error: " + data.error;
         }
     } catch (error) {
-        console.error("Error:", error);
-        statusText.innerText = "Failed to connect to server.";
+        console.error(error);
+        statusMsg.innerText = "Connection Failed. Is backend running?";
     } finally {
-        upscaleBtn.disabled = false;
+        loading.style.display = 'none';
+        actionBtn.disabled = false;
+        actionBtn.innerText = "Start Enhancement";
     }
-}
+};
