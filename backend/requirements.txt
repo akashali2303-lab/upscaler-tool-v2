@@ -1,6 +1,6 @@
-Flask==3.0.0
-flask-cors==4.0.0
-pymongo==4.6.0
-opencv-contrib-python-headless==4.8.0.76
-numpy==1.26.0
-gunicorn==21.2.0
+Flask
+flask-cors
+pymongo
+opencv-contrib-python-headless
+numpy
+gunicorn
