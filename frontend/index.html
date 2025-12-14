@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Image Upscaler</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>AI Image Upscaler</h1>
+        <p>Upscale low-res images by 3x without API keys</p>
+        
+        <div class="upload-section">
+            <input type="file" id="imageInput" accept="image/*">
+            <button onclick="uploadImage()" id="upscaleBtn">Upscale Image</button>
+        </div>
+
+        <div class="status" id="statusText"></div>
+
+        <div class="result-container" id="resultContainer" style="display:none;">
+            <div class="image-box">
+                <h3>Original</h3>
+                <p id="oldRes"></p>
+                <img id="originalPreview" src="" alt="Original">
+            </div>
+            <div class="image-box">
+                <h3>Upscaled (AI)</h3>
+                <p id="newRes"></p>
+                <img id="upscaledPreview" src="" alt="Upscaled">
+                <br>
+                <a id="downloadLink" download="upscaled_image.jpg"><button class="download-btn">Download</button></a>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
