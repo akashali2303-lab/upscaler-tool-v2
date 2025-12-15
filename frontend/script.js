@@ -1,5 +1,6 @@
 // Render URL will go here later
-let API_URL = "http://127.0.0.1:5000/upscale"; 
+// Make sure to add /upscale at the end!
+let API_URL = "https://upscaler-tool-v2.onrender.com/upscale";
 
 const dropZone = document.getElementById('dropZone');
 const fileInput = document.getElementById('fileInput');
