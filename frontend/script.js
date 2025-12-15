@@ -40,7 +40,7 @@ actionBtn.onclick = async () => {
 
     // Detect if we are on the deployed site
     if (window.location.hostname !== "localhost" && window.location.hostname !== "127.0.0.1") {
-        API_URL = "https://YOUR-RENDER-APP-NAME.onrender.com/upscale"; // You will update this later
+        API_URL = "https://upscaler-tool-v2.onrender.com"; // You will update this later
     }
 
     const formData = new FormData();
